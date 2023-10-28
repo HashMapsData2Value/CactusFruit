@@ -1,6 +1,4 @@
 import json
-import sched
-import time
 import requests
 #import redis
 from flask import Flask
