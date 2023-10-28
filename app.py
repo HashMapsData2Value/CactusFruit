@@ -4,8 +4,14 @@ import time
 import requests
 #import redis
 from flask import Flask
+from flask_apscheduler import APScheduler
 from algosdk import encoding
+
 app = Flask(__name__)
+scheduler = APScheduler()
+scheduler.api_enabled = True
+scheduler.init_app(app)
+scheduler.start()
 
 #r = redis.Redis(host='localhost', port=6379, db=0)
 
@@ -20,8 +26,9 @@ def hello_world():
 def add_account(account):
     if encoding.is_valid_address(account):
         if account not in accounts:
-            accounts[account] = -1
+            accounts[account] = -1 #unless changed will mean -1 means uninitialized account
 #        if r.set(account, -1):
+            update_account(account) #TODO: Error handling here, or async?
             return "Accepted {}".format(account) #TODO: add proper HTTP code
 #        return "Failed to store {}".format(account) #TODO: add proper HTTP code
     return "Address not valid: {}".format(account) #TODO: add proper HTTP code
@@ -30,14 +37,18 @@ def add_account(account):
 def list_accounts():
     return json.dumps(accounts) #TODO: 
 
-@app.route('/update') #TODO: remove so this can't be called by anyone, or put behind auth
-def update_accounts():
+@scheduler.task('interval', id='update_on_schedule', seconds=60)
+def update_all_accounts():
     for account in accounts:
-        amount = query_account_balance(account) #TODO: Error handling here
-        if accounts[account] != amount:
-            print("Address {} amount changed from {} to {}!".format(account, accounts[account], amount)) #TODO: replace with proper notification/logging
-        accounts[account] = amount
-        return "success" #TODO: add proper HTTP code
+        update_account(account)
+
+
+def update_account(account):
+    amount = query_account_balance(account) #TODO: Error handling here
+    if accounts[account] != amount:
+        print("Address {} amount changed from {} to {}!".format(account, accounts[account], amount)) #TODO: replace with proper notification/logging
+    accounts[account] = amount
+    return "success" #TODO: add proper HTTP code
 
 def query_account_balance(account):
     response = requests.get(algonode_api.format(account))
@@ -47,10 +58,3 @@ def query_account_balance(account):
             return data['amount']
         raise Exception("No amount in response")
     return -1 #TODO: Error handling here
-
-
-#s = sched.scheduler(time.monotonic, time.sleep)
-#def run_update(a='default'):
-#    print("running update_accounts()")
-#    update_accounts()
-#s.enter()
