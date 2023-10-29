@@ -5,7 +5,7 @@
 Assuming you have git setup and Docker installed:
 
 - `git pull git@github.com:HashMapsData2Value/CactusFruit.git`
-- `cd CactusFruit``
+- `cd CactusFruit`
 - `docker compose up`
 - `docker compose down` (when you are done)
 
