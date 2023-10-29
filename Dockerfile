@@ -12,4 +12,7 @@ EXPOSE 5000
 COPY app.py app.py
 COPY utils.py utils.py
 
+ARG ALGORAND_API
+ENV ALGORAND_API $ALGORAND_API
+
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]

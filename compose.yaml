@@ -1,6 +1,8 @@
 services:
   web:
     build: .
+    environment:
+      - ALGORAND_API=https://testnet-api.algonode.cloud/v2/accounts/{}
     ports:
       - "8000:5000"
   redis_service:

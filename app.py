@@ -1,3 +1,4 @@
+import os
 import requests
 
 from flask import Flask, Response, jsonify
@@ -34,7 +35,7 @@ scheduler.start()
 
 reddis_helper = ReddisHelper() 
 
-ALGONODE_API = "https://testnet-api.algonode.cloud/v2/accounts/{}"
+ALGORAND_API = os.getenv("ALGORAND_API") or ""
 
 @app.route("/")
 def hello_world():
@@ -94,7 +95,7 @@ def refresh_account(account: str) -> bool:
     return False
 
 def query_account_balance(account: str) -> int:
-    res = requests.get(ALGONODE_API.format(account))
+    res = requests.get(ALGORAND_API.format(account))
     if res.status_code == 200:
         data = res.json()
         if "amount" in data:
