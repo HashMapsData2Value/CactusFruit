@@ -1,7 +1,8 @@
 import redis
 import time
 
-class ReddisHelper():
+
+class ReddisHelper:
     """
     A class to help with redis operations.
 
@@ -11,32 +12,33 @@ class ReddisHelper():
     ----------
     r : Redis
         redis client
-    
+
     Methods
     -------
     add_prefix(s):
         Adds the "account:..." prefix to redis key name.
-    
+
     del_prefix(s):
         Strips the "account:..." prefix of the redis key name.
-    
+
     exists(k):
         Checks if value exists in redis.
-    
+
     get_val(k):
         Gets the value of the key from redis.
-    
+
     set_val(k, i):
         Sets the value for given key in redis.
 
     accounts_list():
         Returns a list of all accounts in redis.
-    
+
     append_refresh(account, old_val, new_val):
         Appends a refresh event to the redis stream.
-    
+
     """
-    def __init__(self, host: str = 'redis_service', port: int = 6379):
+
+    def __init__(self, host: str = "redis_service", port: int = 6379):
         """
         Initializes the redis client for the ReddisHelper object.
 
@@ -49,7 +51,7 @@ class ReddisHelper():
             The port of the redis service.
         """
         self.r = redis.Redis(host=host, port=port)
-    
+
     @staticmethod
     def add_prefix(s: str) -> str:
         """
@@ -59,7 +61,7 @@ class ReddisHelper():
         ----------
         s : str
             Input string key name.
-        
+
         Returns
         -------
         str
@@ -77,7 +79,7 @@ class ReddisHelper():
         ----------
         s : str
             Input string key name.
-        
+
         Returns
         -------
         str
@@ -92,7 +94,7 @@ class ReddisHelper():
         ----------
         k : str
             The key name.
-        
+
         Returns
         -------
         bool
@@ -107,7 +109,7 @@ class ReddisHelper():
         ----------
         k : str
             The key name.
-        
+
         Returns
         -------
         int
@@ -129,7 +131,7 @@ class ReddisHelper():
             The key name.
         i : int
             The integer value to set.
-        
+
         Returns
         -------
         int
@@ -152,13 +154,13 @@ class ReddisHelper():
         for key in self.r.scan_iter("account:*"):
             accounts.append(self.del_prefix(key.decode("utf-8")))
         return accounts
-    
+
     def append_refresh(self, account: str, old_val: int, new_val: int) -> bytes:
         """
         Appends a refresh event to the account_refresh redis stream.
-        
+
         An "account_refresh event" is emitted when the balance of a tracked account has changed.
-        
+
         (The idea behind this is to show how these types of tracked events can be passed off to a message queue.)
 
         Parameters
@@ -169,10 +171,18 @@ class ReddisHelper():
             The old balance of the account.
         new_val : int
             The new balance of the account.
-        
+
         Returns
         -------
         bytes
-        
+
         """
-        return self.r.xadd("account_refresh", {"ts": time.time(), "account": account, "old_val": old_val, "new_val": new_val})
+        return self.r.xadd(
+            "account_refresh",
+            {
+                "ts": time.time(),
+                "account": account,
+                "old_val": old_val,
+                "new_val": new_val,
+            },
+        )

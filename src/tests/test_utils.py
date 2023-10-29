@@ -2,12 +2,13 @@ import unittest
 from unittest.mock import patch
 from ..utils import ReddisHelper
 
+
 class TestReddisHelper(unittest.TestCase):
     def testAddPrefix(self):
         assert ReddisHelper.add_prefix("test") == "account:test"
         assert ReddisHelper.add_prefix("account:test") == "account:test"
         self.assertRaises(TypeError, ReddisHelper.add_prefix, 10)
-    
+
     def testDelPrefix(self):
         assert ReddisHelper.del_prefix("test") == "test"
         assert ReddisHelper.del_prefix("account:test") == "test"
@@ -29,7 +30,7 @@ class TestReddisHelper(unittest.TestCase):
 
         helper = ReddisHelper()
         helper.get_val("test")
-        
+
         mock_redis_instance.get.assert_called_with("account:test")
 
     @patch("redis.Redis")
@@ -39,7 +40,7 @@ class TestReddisHelper(unittest.TestCase):
 
         helper = ReddisHelper()
         helper.set_val("test", 10)
-        
+
         mock_redis_instance.set.assert_called_with("account:test", 10)
 
     @patch("redis.Redis")
@@ -49,7 +50,7 @@ class TestReddisHelper(unittest.TestCase):
 
         helper = ReddisHelper()
         helper.accounts_list()
-        
+
         mock_redis_instance.scan_iter.assert_called_with("account:*")
 
     @patch("time.time", return_value=1000)
@@ -60,5 +61,8 @@ class TestReddisHelper(unittest.TestCase):
 
         helper = ReddisHelper()
         helper.append_refresh("test", 10, 20)
-        
-        mock_redis_instance.xadd.assert_called_with("account_refresh", {"ts": 1000, "account": "test", "old_val": 10, "new_val": 20})
+
+        mock_redis_instance.xadd.assert_called_with(
+            "account_refresh",
+            {"ts": 1000, "account": "test", "old_val": 10, "new_val": 20},
+        )
