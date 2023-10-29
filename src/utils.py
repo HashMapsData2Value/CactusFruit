@@ -49,8 +49,9 @@ class ReddisHelper():
             The port of the redis service.
         """
         self.r = redis.Redis(host=host, port=port)
-
-    def add_prefix(self, s: str) -> str:
+    
+    @staticmethod
+    def add_prefix(s: str) -> str:
         """
         Adds the "account:..." prefix to redis key name, if not already present.
 
@@ -67,7 +68,8 @@ class ReddisHelper():
             return "account:" + s
         return s
 
-    def del_prefix(self, s: str) -> str:
+    @staticmethod
+    def del_prefix(s: str) -> str:
         """
         Strips the "account:..." prefix from the redis key name, if present.
 
