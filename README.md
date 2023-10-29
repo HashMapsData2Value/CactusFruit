@@ -32,18 +32,31 @@ This will add the [AlgoDev TestNet Dispenser](https://dispenser.testnet.aws.algo
 
 ## Flow
 
+Navigating to the root route:
+
 ![Hello World!](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/hello_world.png?raw=true)
+
+Adding an address:
 
 ![Successfully adding an address.](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/success_add.png?raw=true)
 
+Trying to add an adress that has already been added:
+
 ![Trying to add an address that already has been added.](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/repeat_add.png?raw=true)
+
+Trying to add an invalid address:
 
 ![Trying to add an invalid address.](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/bad_address.png?raw=true)
 
+Listing the addresses:
+
 ![Listing the addresses](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/list_addresses.png?raw=true)
 
+The following image shows an example of a change in account balance having been registered by the server and surfaced in the logs:
 
+![Screenshot of the application logs showing a change in the account balance of a tracked account.](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/logs_event.png?raw=true)
 
+The events can also be found in the `account_refresh` Redis stream on the Redis database. I added it to show "pub/sub" type of message broker queue functionality.
 
 ## Files
 - app.py - The Python Flask application with which I completed the challenge.
@@ -57,25 +70,19 @@ Redis is used for two things here:
 2) To showcase the application connecting to a message queue/broker. When the server notices that the balance of an account has changed, in addition to ***surfacing it into the application log*** it will also send it to a Redis so-called "stream", an append-only log that can be consumed by other services.
 
 
-The following image shows an example of a change in account balance having been registered by the server and surfaced in the logs.
-![Screenshot of the application logs showing a change in the account balance of a tracked account.](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/logs_event.png?raw=true)
-
-The events can also be found in the `account_refresh` Redis stream on the Redis database.
-
-
 ## CI/CD
 
 GitHub Actions is used for CI/CD and can be found under the .github/workflows/ directory.
 
 Previous actions can also be viewed under: https://github.com/HashMapsData2Value/CactusFruit/actions.
 
-### docker-build: 
+### docker-build
 
 Builds the Docker image to see that it can be built. Specifically the Flask application.
 
 Note that, in addition to setting up the Redis DB, the compose file passes in the ALGORAND_API env variable that specifies AlgoNode's testnet. So running docker build for it specifically requires that env value.
 
-### unittest 
+### unittest
 
 Will run the Python unittests which can be found under `src/tests`. Only the `utils.py` file has test coverage.
 
