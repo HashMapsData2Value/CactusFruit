@@ -1,7 +1,7 @@
 """
 app.py
 
-This file contains the main Flask application of the Account Watcher code challenge.
+This file contains the main Flask application of the Cactus Fruit code challenge.
 
 """
 
@@ -52,7 +52,7 @@ def hello_world():
     """
     Hello world route.
     """
-    return "<h1>Welcome to account watcher!</h1>"
+    return "<h1>Welcome to Cactus Fruit!</h1>"
 
 
 @app.route("/add/<account>")
