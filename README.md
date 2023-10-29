@@ -5,6 +5,7 @@
 Assuming you have git setup and Docker installed:
 
 - `git pull git@github.com:HashMapsData2Value/CactusFruit.git`
+- `cd CactusFruit``
 - `docker compose up`
 - `docker compose down` (when you are done)
 
@@ -28,6 +29,21 @@ As a suggestion, I would suggest running:
 (Or just navigating in the browser.)
 
 This will add the [AlgoDev TestNet Dispenser](https://dispenser.testnet.aws.algodev.network/) address. Whenever someone dispense Algo from that account a change will be registered. I recommend inputting their own address into the page, which will have them send testAlgo to themselves.
+
+## Flow
+
+![Hello World!](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/hello_world.png?raw=true)
+
+![Successfully adding an address.](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/success_add.png?raw=true)
+
+![Trying to add an address that already has been added.](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/repeat_add.png?raw=true)
+
+![Trying to add an invalid address.](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/bad_address.png?raw=true)
+
+![Listing the addresses](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/list_addresses.png?raw=true)
+
+
+
 
 ## Files
 - app.py - The Python Flask application with which I completed the challenge.
