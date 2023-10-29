@@ -31,24 +31,33 @@ This will add the [AlgoDev TestNet Dispenser](https://dispenser.testnet.aws.algo
 
 ## Files
 - app.py - The Python Flask application with which I completed the challenge.
-- utils.py - Specifically contains the RedisHelper class, a class 
+- utils.py - Specifically contains the RedisHelper class, a class that makes dealing with the db cleaner. 
 - test/test_utils.py - Contains tests for the RedisHelper utility class. (I did not bother creating more tests.)
 
 ## Regarding Redis
 
 Redis is used for two things here:
-- 1) To showcase the application connecting to a database for the account tracking. This is necessary unless you'd prefer storing the tracked state inside the Flask server itself.
-- 2) To showcase the application connecting to a message queue/broker. When the server notices that the balance of an account has changed, beyond ***passing it onto the application log*** it will also send it to a Redis so-called "stream", an append-only log that can be consumed by other services.
+1) To showcase the application connecting to a database for the account tracking. This is necessary unless you'd prefer storing the tracked state inside the Flask server itself.
+2) To showcase the application connecting to a message queue/broker. When the server notices that the balance of an account has changed, in addition to ***surfacing it into the application log*** it will also send it to a Redis so-called "stream", an append-only log that can be consumed by other services.
+
+
+The following image shows an example of a change in account balance having been registered by the server and surfaced in the logs.
+![Screenshot of the application logs showing a change in the account balance of a tracked account.](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/logs_event.jpg?raw=true)
+
+The events can also be found in the `account_refresh` Redis stream on the Redis database.
+
 
 ## CI/CD
 
 GitHub Actions is used for CI/CD and can be found under the .github/workflows/ directory.
 
+Previous actions can also be viewed under: https://github.com/HashMapsData2Value/CactusFruit/actions.
+
 ### docker-build: 
 
 Builds the Docker image to see that it can be built. Specifically the Flask application.
 
-Note that, in addition to setting up the Redis DB, the compose file passes in the ALGORAND_API env variable that specifies AlgoNode's testnet.
+Note that, in addition to setting up the Redis DB, the compose file passes in the ALGORAND_API env variable that specifies AlgoNode's testnet. So running docker build for it specifically requires that env value.
 
 ### unittest 
 
