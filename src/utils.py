@@ -148,7 +148,7 @@ class ReddisHelper:
 
     def accounts_list(self) -> list[str]:
         """
-        Returns a list of strings of all accounts, as found with 
+        Returns a list of strings of all accounts, as found with
         Redis' scan() using "account:*" as the prefix.
 
         Parameters
@@ -171,7 +171,7 @@ class ReddisHelper:
         An "account_refresh event" is emitted when the balance of a
         tracked account has changed.
 
-        (The idea behind this is to show how these types of tracked 
+        (The idea behind this is to show how these types of tracked
         events can be passed off to a message queue.)
 
         Parameters

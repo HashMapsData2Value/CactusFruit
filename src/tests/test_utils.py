@@ -13,6 +13,7 @@ class TestReddisHelper(unittest.TestCase):
     """
     Test class for ReddisHelper.
     """
+
     def test_add_prefix(self):
         """
         Tests that add_prefix() adds the prefix to the key name.
