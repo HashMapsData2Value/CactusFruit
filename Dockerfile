@@ -9,8 +9,8 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 5000
 
-COPY app.py app.py
-COPY utils.py utils.py
+COPY src/app.py app.py
+COPY src/utils.py utils.py
 
 ARG ALGORAND_API
 ENV ALGORAND_API $ALGORAND_API

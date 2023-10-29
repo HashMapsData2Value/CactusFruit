@@ -12,12 +12,12 @@ Algorand account watcher code challenge
 - [x] - Logging
 - [x] - Dockerization
 - [x] - Database
-- [] - Message Queue?
+- [x] - Message Queue?
 - [x] - Typing
 - [x] - Linting
 - [] - Testing
 - [x] - GitHub Actions
-- [] - Documentation (docstrings, this readme, Swagger)
+- [x] - Documentation (docstrings, this readme, Swagger)
 ...
 
 ## Docker

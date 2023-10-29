@@ -43,6 +43,9 @@ def hello_world():
 
 @app.route("/add/<account>")
 def add_account(account: str):
+    """
+    Adds an account to the redis database.
+    """
     try:
         app.logger.info("Beginning to add account {}".format(account))
         if encoding.is_valid_address(account):
@@ -64,6 +67,9 @@ def add_account(account: str):
 
 @app.route("/list")
 def list_accounts():
+    """
+    Returns a JSON-list of all accounts currently being tracked, alongside their balances.
+    """
     d = {}
     for account in reddis_helper.accounts_list():
         d[account] = int(reddis_helper.get_val(account))
@@ -71,6 +77,10 @@ def list_accounts():
 
 @scheduler.task("interval", id="update_on_schedule", seconds=60)
 def refresh_all_account():
+    """
+    Refreshes the balances of the accounts in the redis database.
+    Set to a schedule, every second as listed in the function decorator.
+    """
     try:
         for account in reddis_helper.accounts_list():
             refresh_account(account)
@@ -78,6 +88,10 @@ def refresh_all_account():
         app.logger.error("Error: {}".format(e))
 
 def refresh_account(account: str) -> bool:
+    """
+    Refreshes an acccount in the redis database, comparing it to the previous account balance.
+    If the balance has changed, it will update the balance, append a refresh event to the redis stream and log it in Flask's log.
+    """
     new_val = query_account_balance(account)
     old_val = reddis_helper.get_val(account)
 
@@ -87,14 +101,16 @@ def refresh_account(account: str) -> bool:
                 account, old_val, new_val
             )
             app.logger.info(success_message)
-            if not reddis_helper.append_refresh(account, old_val, new_val):
-                raise Exception("Failed to append refresh success for account {}".format(account))
+            reddis_helper.append_refresh(account, old_val, new_val)
             return True
         else:
             raise Exception("Failed to update account {}".format(account))
     return False
 
 def query_account_balance(account: str) -> int:
+    """
+    Queries the set Algorand API for the balance of an account.
+    """
     res = requests.get(ALGORAND_API.format(account))
     if res.status_code == 200:
         data = res.json()
