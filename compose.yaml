@@ -3,5 +3,5 @@ services:
     build: .
     ports:
       - "8000:5000"
-  redis:
+  redis_service:
     image: "redis:alpine"

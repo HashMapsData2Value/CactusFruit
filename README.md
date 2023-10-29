@@ -9,16 +9,15 @@ Algorand account watcher code challenge
 # TODO
 
 - [x] - Main Flask functionality
-- [] - Logging
+- [x] - Logging
 - [x] - Dockerization
-- [] - Database
+- [x] - Database
 - [] - Message Queue?
-- [] - Typing
+- [x] - Typing
 - [x] - Linting
 - [] - Testing
 - [x] - GitHub Actions
-- [] - Monitoring
-- [] - Documentation (this readme, Swagger)
+- [] - Documentation (docstrings, this readme, Swagger)
 ...
 
 ## Docker
@@ -28,3 +27,9 @@ The Flask server is containerized and is ran alongside a redis database using Do
 ## CI/CD
 
 GitHub Actions are used for CI/CD and can be found under the .github/workflows/ directory.
+
+
+## Example Valid Algorand Addresses
+
+- AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ (FeeSink)
+- HZ57J3K46JIJXILONBBZOHX6BKPXEM2VVXNRFSUED6DKFD5ZD24PMJ3MVA (Algorand Testnet Dispenser)
