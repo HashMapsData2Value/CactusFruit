@@ -1,5 +1,13 @@
-import redis
+"""
+utils.py
+
+This file contains the ReddisHelper class, which is used to help with redis operations.
+
+"""
+
+# pylint: disable=import-error
 import time
+import redis
 
 
 class ReddisHelper:
@@ -140,7 +148,8 @@ class ReddisHelper:
 
     def accounts_list(self) -> list[str]:
         """
-        Returns a list of strings of all accounts, as found with Redis' scan() using "account:*" as the prefix.
+        Returns a list of strings of all accounts, as found with 
+        Redis' scan() using "account:*" as the prefix.
 
         Parameters
         ----------
@@ -159,9 +168,11 @@ class ReddisHelper:
         """
         Appends a refresh event to the account_refresh redis stream.
 
-        An "account_refresh event" is emitted when the balance of a tracked account has changed.
+        An "account_refresh event" is emitted when the balance of a
+        tracked account has changed.
 
-        (The idea behind this is to show how these types of tracked events can be passed off to a message queue.)
+        (The idea behind this is to show how these types of tracked 
+        events can be passed off to a message queue.)
 
         Parameters
         ----------

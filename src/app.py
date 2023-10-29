@@ -1,12 +1,18 @@
-import os
-import requests
+"""
+app.py
 
+This file contains the main Flask application of the Account Watcher code challenge.
+
+"""
+
+
+# pylint: disable=import-error disable=broad-exception-caught disable=broad-exception-raised
+import os
+from logging.config import dictConfig
+import requests
 from flask import Flask, Response, jsonify
 from flask_apscheduler import APScheduler
-from logging.config import dictConfig
-
 from algosdk import encoding
-
 from utils import ReddisHelper
 
 
@@ -43,6 +49,9 @@ ALGORAND_API = os.getenv("ALGORAND_API") or ""
 
 @app.route("/")
 def hello_world():
+    """
+    Hello world route.
+    """
     return "<h1>Welcome to account watcher!</h1>"
 
 
@@ -52,35 +61,28 @@ def add_account(account: str):
     Adds an account to the redis database.
     """
     try:
-        app.logger.info("Beginning to add account {}".format(account))
+        app.logger.info(f"Beginning to add account {account}")
         if encoding.is_valid_address(account):
             if not reddis_helper.exists(account):
                 if reddis_helper.set_val(account, -1):
-                    app.logger.info(
-                        "Successfully initialized account {}".format(account)
-                    )
+                    app.logger.info(f"Successfully initialized account {account}")
                 else:
-                    app.logger.error("Failed to initialize account {}".format(account))
-                    raise Exception("Failed to initialize account {}".format(account))
+                    app.logger.error(f"Failed to initialize account {account}")
+                    raise Exception(f"Failed to initialize account {account}")
                 refresh_account(account)
-                return Response(
-                    "Successfully added account {}".format(account), status=200
-                )
-            return Response("Account already added {}".format(account), status=200)
-        else:
-            app.logger.warning(
-                "Warning: Provided with invalid address: {}".format(account)
-            )
-            return Response("Address not valid: {}".format(account), status=400)
+                return Response(f"Successfully added account {account}", status=200)
+            return Response(f"Account already added {account}", status=200)
+        app.logger.warning(f"Warning: Provided with invalid address: {account}")
+        return Response(f"Address not valid: {account}", status=400)
     except Exception as e:
-        app.logger.error("Error: {}".format(e))
+        app.logger.error(f"Error: {e}")
         return Response("Internal Error!", status=500)
 
 
 @app.route("/list")
 def list_accounts():
     """
-    Returns a JSON-list of all accounts currently being tracked, alongside their balances.
+    Returns a JSON-list of all accounts currently being tracked w/ balances.
     """
     d = {}
     for account in reddis_helper.accounts_list():
@@ -98,27 +100,27 @@ def refresh_all_account():
         for account in reddis_helper.accounts_list():
             refresh_account(account)
     except Exception as e:
-        app.logger.error("Error: {}".format(e))
+        app.logger.error(f"Error: {e}")
 
 
 def refresh_account(account: str) -> bool:
     """
-    Refreshes an acccount in the redis database, comparing it to the previous account balance.
-    If the balance has changed, it will update the balance, append a refresh event to the redis stream and log it in Flask's log.
+    Refreshes an acccount in the redis database, comparing it to the previous
+    account balance. If the balance has changed, it will update the balance,
+    append a refresh event to the redis stream and log it in Flask's log.
     """
     new_val = query_account_balance(account)
     old_val = reddis_helper.get_val(account)
 
     if old_val != new_val:
         if reddis_helper.set_val(account, new_val):
-            success_message = "Address {} amount changed from {} to {}!".format(
-                account, old_val, new_val
+            success_message = (
+                f"Address {account} amount changed from {old_val} to {new_val}!"
             )
             app.logger.info(success_message)
             reddis_helper.append_refresh(account, old_val, new_val)
             return True
-        else:
-            raise Exception("Failed to update account {}".format(account))
+        raise Exception(f"Failed to update account {account}")
     return False
 
 
@@ -132,4 +134,4 @@ def query_account_balance(account: str) -> int:
         if "amount" in data:
             return int(data["amount"])
         raise Exception("No amount in response")
-    raise Exception("Bad response from algonde_api {}".format(res))
+    raise Exception(f"Bad response from algonde_api {res}")
