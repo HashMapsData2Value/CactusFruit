@@ -18,7 +18,7 @@ algonode_api = "https://mainnet-api.algonode.cloud/v2/accounts/{}"
 
 @app.route('/')
 def hello_world():
-    return 'Welcome to account watcher!'
+    return '<h1>Welcome to account watcher!</h1>'
 
 @app.route('/add/<account>')
 def add_account(account):
@@ -42,11 +42,14 @@ def update_all_accounts():
 
 
 def update_account(account):
-    amount = query_account_balance(account) #TODO: Error handling here
-    if accounts[account] != amount:
-        print("Address {} amount changed from {} to {}!".format(account, accounts[account], amount)) #TODO: replace with proper notification/logging
-    accounts[account] = amount
-    return "success" #TODO: add proper HTTP code
+    try:
+        amount = query_account_balance(account) #TODO: Error handling here
+        if accounts[account] != amount:
+            print("Address {} amount changed from {} to {}!".format(account, accounts[account], amount)) #TODO: replace with proper notification/logging
+        accounts[account] = amount
+        return True
+    except:
+        print("Failed to update account {}".format(account)) #TODO: replace with proper notification/logging
 
 def query_account_balance(account):
     response = requests.get(algonode_api.format(account))
