@@ -42,7 +42,7 @@ Redis is used for two things here:
 
 
 The following image shows an example of a change in account balance having been registered by the server and surfaced in the logs.
-![Screenshot of the application logs showing a change in the account balance of a tracked account.](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/logs_event.jpg?raw=true)
+![Screenshot of the application logs showing a change in the account balance of a tracked account.](https://github.com/HashMapsData2Value/CactusFruit/blob/main/docs/logs_event.png?raw=true)
 
 The events can also be found in the `account_refresh` Redis stream on the Redis database.
 
